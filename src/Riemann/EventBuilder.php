@@ -3,9 +3,6 @@ namespace Riemann;
 
 class EventBuilder
 {
-    const DEFAULT_METRIC = 1;
-
-    private $dateTimeProvider;
     private $host;
     private $tags;
     private $service;
@@ -17,11 +14,11 @@ class EventBuilder
     private $client;
 
     public function __construct(
-        DateTimeProvider $dateTimeProvider,
+        $service,
         $host,
         array $initialTags = array()
     ) {
-        $this->dateTimeProvider = $dateTimeProvider;
+        $this->service = $service;
         $this->host = $host;
         $this->tags = $initialTags;
     }
@@ -51,7 +48,7 @@ class EventBuilder
         }
         $event = new Event();
         $event->host = $this->host;
-        $event->time = $this->dateTimeProvider->now()->getTimestamp();
+        $event->time = (new \DateTime())->getTimestamp();
         $event->service = $this->service;
         $event->tags = $this->tags;
 
@@ -71,8 +68,8 @@ class EventBuilder
         $this->client = $client;
     }
 
-    public function sendEvent()
+    public function sendEvent($flush = true)
     {
-        $this->client->sendEvent($this->build());
+        $this->client->sendEvent($this->build(), $flush);
     }
 }

@@ -3,12 +3,12 @@ namespace Riemann;
 
 class EventBuilderFactory
 {
-    public function create()
+    public function create($service)
     {
         return new EventBuilder(
-            new DateTimeProvider(),
+            $service,
             php_uname('n'),
-            array('www')
+            array('php')
         );
     }
 }
